@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:minder/models/reminder.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Minder',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lime,
+        brightness: Brightness.dark,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Minder'),
     );
   }
 }
@@ -28,41 +30,56 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+  var ctrl = TextEditingController();
+  List<Reminder> reminders = [Reminder(text: 'Do something', time: DateTime.now().add(Duration(days: 1)))];
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(  
-        title: Text(widget.title),
+      appBar: AppBar(
+        title: Text(
+          widget.title,
+          style: GoogleFonts.palanquin(),
+        ),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: reminders.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      Checkbox(
+                        value: reminders[index].isDone,
+                        onChanged: (value) => setState(() => reminders[index].isDone = value),
+                      ),
+                      Text(reminders[index].text),
+                      Text(reminders[index].time.toString()),
+                    ],
+                  );
+                },
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            TextField(
+              controller: ctrl,
+              onEditingComplete: () {
+                setState(() {
+                  reminders.add(Reminder(text: ctrl.text));
+                  ctrl.clear();
+                });
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+      /*floatingActionButton: FloatingActionButton(
+        onPressed: ()=>{},
+        tooltip: 'Add Todo',
         child: Icon(Icons.add),
-      ), 
+      ),*/
     );
   }
 }
