@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class Reminder {
-  String text;
-  DateTime time = DateTime.now().add(Duration(days: 1));
-  DateTime timeCreated = DateTime.now();
-  bool isDone = false;
-  int postponeTimes = 0;
+  String? text;
+  DateTime? time = DateTime.now().add(Duration(days: 1));
+  DateTime? timeCreated = DateTime.now();
+  bool? isDone = false;
+  int? postponeTimes = 0;
 
   Reminder({
     this.text,
@@ -16,11 +16,11 @@ class Reminder {
   });
 
   Reminder copyWith({
-    String text,
-    DateTime time,
-    DateTime timeCreated,
-    bool isDone,
-    int postponeTimes,
+    String? text,
+    DateTime? time,
+    DateTime? timeCreated,
+    bool? isDone,
+    int? postponeTimes,
   }) {
     return Reminder(
       text: text ?? this.text,
@@ -42,7 +42,6 @@ class Reminder {
   }
 
   factory Reminder.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
 
     return Reminder(
       text: map['text'],
