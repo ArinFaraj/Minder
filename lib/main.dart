@@ -5,7 +5,6 @@ import 'package:minder/assets/svgs.dart';
 import 'package:minder/models/page.dart';
 import 'package:minder/models/reminder.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -74,6 +73,84 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selectedIn,
+        onTap: (value) => setState(() {
+          selectedIn = value;
+        }),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.check_box), label: 'Todo List'),
+          BottomNavigationBarItem(
+              activeIcon: calendarIcon(context, Theme.of(context).accentColor),
+              icon: calendarIcon(context, Colors.grey),
+              label: 'Calendar'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(PageRouteBuilder(
+              opaque: false,
+              pageBuilder: (BuildContext context, _, __) {
+                return Scaffold(
+                  appBar: AppBar(
+                    leading: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.wysiwyg),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.fullscreen),
+                        onPressed: () {},
+                      )
+                    ],
+                  ),
+                  backgroundColor: Colors.black.withOpacity(0.3),
+                  body: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      constraints: BoxConstraints.tightFor(height: 125),
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).canvasColor,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: ctrl,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'What would you like to do?',
+                            ),
+                            onEditingComplete: () {
+                              setState(() {
+                                reminders.add(Reminder(text: ctrl.text));
+                                ctrl.clear();
+                              });
+                            },
+                          ),
+                          Row(
+                            children: [
+                              TextButton.icon(onPressed: () {}, icon: Icon(Icons.calendar_today), label: Text('Today')),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }));
+        },
+        child: Icon(Icons.add),
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -124,14 +201,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.string(nightLamp),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: SvgPicture.string(
+                            nightLamp,
+                            color: Colors.white.withAlpha(Theme.of(context).brightness == Brightness.dark ? 0 : 200),
+                            colorBlendMode: BlendMode.srcATop,
+                          ),
+                        ),
                         SizedBox(height: 35),
+                        // todo daily qoutes
                         Text(
                           'Make something happen from planing the day ahead.',
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         SizedBox(height: 10),
+                        // todo hourly qoutes
                         Text(
                           'Enjoy your evening.',
                           textAlign: TextAlign.center,
@@ -141,48 +227,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
           ),
-          TextField(
-            controller: ctrl,
-            onEditingComplete: () {
-              setState(() {
-                reminders.add(Reminder(text: ctrl.text));
-                ctrl.clear();
-              });
-            },
+        ],
+      ),
+    );
+  }
+
+  Container calendarIcon(BuildContext context, Color color) {
+    return Container(
+      width: 23,
+      height: 23,
+      child: Stack(
+        children: [
+          Center(
+            child: SvgPicture.string(
+              calendarIconSvg,
+              color: color,
+            ),
           ),
-          BottomNavigationBar(
-            currentIndex: selectedIn,
-            onTap: (value) => setState(() {
-              selectedIn = value;
-            }),
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.check_box), label: 'agagag'),
-              BottomNavigationBarItem(
-                  icon: Container(
-                    width: 23,
-                    height: 23,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: SvgPicture.string(
-                            calendarIcon,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        Center(
-                          child: Text(
-                            '11',
-                            style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).backgroundColor),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  label: 'agagag'),
-              BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'agagag'),
-            ],
+          Center(
+            child: Text(
+              DateTime.now().day.toString(),
+              style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).canvasColor),
+            ),
           ),
         ],
       ),

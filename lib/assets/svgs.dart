@@ -26,7 +26,7 @@ String nightLamp = '''<svg xmlns="http://www.w3.org/2000/svg" width="210.277" he
 </svg>
 ''';
 
-String calendarIcon = '''
+String calendarIconSvg = '''
 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="29" viewBox="0 0 26 29">
   <rect id="Rectangle_6" data-name="Rectangle 6" width="26" height="26" rx="4" transform="translate(0 3)" fill="#686868"/>
   <rect id="Rectangle_8" data-name="Rectangle 8" width="3" height="4" transform="translate(5)" fill="#686868"/>
